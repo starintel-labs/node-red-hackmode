@@ -1,8 +1,6 @@
 module.exports = function (RED) {
   'use strict';
 
-  const helpers = require('../lib/hackmode-subprocess');
-
   function HackmodeNode(config) {
     RED.nodes.createNode(this, config);
     const node = this;
@@ -12,7 +10,7 @@ module.exports = function (RED) {
       send = send || function () { node.send.apply(node, arguments); };
       done = done || function (err) { if (err) node.error(err, msg); };
 
-      if (!node.runtime) {
+      if (!node.runtime || typeof node.runtime.evaluate !== 'function') {
         const e = new Error('missing hackmode-runtime configuration');
         e.code = 'HM_CONFIG';
         return done(e);
@@ -28,7 +26,7 @@ module.exports = function (RED) {
       }
 
       node.status({ fill: 'blue', shape: 'dot', text: 'evaluating' });
-      helpers.runHackmode(node.runtime, form, (err, stdout) => {
+      node.runtime.evaluate(form, (err, stdout) => {
         if (err) {
           node.status({ fill: 'red', shape: 'ring', text: err.code || 'error' });
           return done(err);

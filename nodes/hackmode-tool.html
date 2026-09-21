@@ -1,0 +1,44 @@
+<script type="text/javascript">
+    RED.nodes.registerType('hackmode-tool', {
+        category: 'hackmode',
+        color: '#1abc9c',
+        defaults: {
+            name: { value: '' },
+            runtime: { type: 'hackmode-runtime', required: true },
+            system: { value: 'recon-dns' },
+            template: { value: '(recon.dns:subfinder "{{payload}}")' }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: 'serial.svg',
+        label: function () {
+            return this.name || 'hackmode-tool: ' + (this.system || 'recon-dns');
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="hackmode-tool">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-runtime"><i class="fa fa-server"></i> Runtime</label>
+        <input type="text" id="node-input-runtime">
+    </div>
+    <div class="form-row">
+        <label for="node-input-system"><i class="fa fa-cube"></i> ASDF system</label>
+        <input type="text" id="node-input-system" placeholder="recon-dns">
+    </div>
+    <div class="form-row">
+        <label for="node-input-template"><i class="fa fa-code"></i> Form template</label>
+        <input type="text" id="node-input-template">
+        <div class="form-tips">Placeholders: {{payload}} (msg.payload) and {{args}} (msg.args rendered as a Lisp alist). The node wraps the form with asdf:load-system of the configured tool system.</div>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="hackmode-tool">
+    <p>Run one hackmode tool family in a fresh runtime process. Ships a
+       recon-dns default; every additional tool system (see the Kali coverage
+       roadmap) is the same node with a different system + template.</p>
+</script>

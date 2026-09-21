@@ -1,6 +1,6 @@
 {
   "name": "node-red-hackmode",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Node-RED nodes for the hackmode Common Lisp exploit metaframework",
   "license": "MIT",
   "repository": {
@@ -23,7 +23,8 @@
   "node-red": {
     "nodes": {
       "hackmode-runtime": "nodes/hackmode-runtime.js",
-      "hackmode": "nodes/hackmode.js"
+      "hackmode": "nodes/hackmode.js",
+      "hackmode-tool": "nodes/hackmode-tool.js"
     }
   }
 }
