@@ -7,19 +7,24 @@ const os = require('node:os');
 const path = require('node:path');
 const { loadModules, instantiate, driveInput, fixturePath, readCapture } = require('./helpers');
 
-const RUNTIME = {
-  id: 'rt1',
-  lisp: fixturePath('fake-lisp'),
-  hackmodeHome: '/opt/hackmode/source',
-  timeoutMs: 30000
-};
+const { loadModules: _lm } = require('./helpers');
+
+function runtimeNode(RED, overrides) {
+  return instantiate(RED, 'hackmode-runtime', Object.assign({
+    id: 'rt1',
+    lisp: fixturePath('fake-lisp'),
+    source: 'checkout',
+    hackmodeHome: '/opt/hackmode/source',
+    timeoutMs: 30000
+  }, overrides));
+}
 
 function captureFile() {
   return path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'hm-')), 'cap.json');
 }
 
 function makeNode(RED, config, runtime) {
-  RED._nodesById.rt1 = Object.assign({}, RUNTIME, runtime || {});
+  RED._nodesById.rt1 = runtimeNode(RED, runtime);
   return instantiate(RED, 'hackmode', Object.assign({ runtime: 'rt1' }, config));
 }
 
@@ -111,11 +116,53 @@ test('hackmode node refuses to run without a runtime config', async () => {
 test('hackmode node works when loaded alone on its own RED view (loader isolation regression)', async () => {
   const cap = captureFile();
   const restore = freshEnv(cap);
+  const REDcfg = loadModules('nodes/hackmode-runtime.js');
   const RED = loadModules('nodes/hackmode.js');
-  RED._nodesById.rt1 = Object.assign({}, RUNTIME);
+  RED._nodesById.rt1 = instantiate(REDcfg, 'hackmode-runtime', {
+    id: 'rt1', lisp: fixturePath('fake-lisp'), source: 'checkout',
+    hackmodeHome: '/opt/hackmode/source', timeoutMs: 30000
+  });
   const node = instantiate(RED, 'hackmode', { runtime: 'rt1', form: '(solo)' });
   const result = await driveInput(node, {});
   restore();
   assert.strictEqual(result.err, undefined, result.err && result.err.message);
   assert.match(readCapture(cap).argv.join(' '), /\(solo\)/);
+});
+
+test('hackmode-tool node renders templates and loads the tool system', async () => {
+  const cap = captureFile();
+  const restore = freshEnv(cap);
+  const REDcfg = loadModules('nodes/hackmode-runtime.js');
+  const RED = loadModules('nodes/hackmode-tool.js');
+  RED._nodesById.rt1 = instantiate(REDcfg, 'hackmode-runtime', {
+    id: 'rt1', lisp: fixturePath('fake-lisp'), source: 'checkout',
+    hackmodeHome: '/opt/hackmode/source', timeoutMs: 30000
+  });
+  const node = instantiate(RED, 'hackmode-tool', {
+    runtime: 'rt1', system: 'recon-dns', template: '(recon.dns:subfinder "{{payload}}")'
+  });
+  const result = await driveInput(node, { payload: 'starintel.actor', args: { depth: 2 } });
+  restore();
+  assert.strictEqual(result.err, undefined, result.err && result.err.message);
+  const argv = readCapture(cap).argv.join(' ');
+  assert.match(argv, /asdf:load-system :recon-dns/);
+  assert.match(argv, /recon\.dns:subfinder "starintel\.actor"/);
+});
+
+test('hackmode-tool alist rendering quotes strings and passes numbers raw', async () => {
+  const cap = captureFile();
+  const restore = freshEnv(cap);
+  const REDcfg = loadModules('nodes/hackmode-runtime.js');
+  const RED = loadModules('nodes/hackmode-tool.js');
+  RED._nodesById.rt1 = instantiate(REDcfg, 'hackmode-runtime', {
+    id: 'rt1', lisp: fixturePath('fake-lisp'), source: 'checkout',
+    hackmodeHome: '/opt/hackmode/source', timeoutMs: 30000
+  });
+  const node = instantiate(RED, 'hackmode-tool', {
+    runtime: 'rt1', system: 'recon-dns', template: '(f {{payload}} :args {{args}})'
+  });
+  await driveInput(node, { payload: 'x', args: { depth: 2, mode: 'fast' } });
+  restore();
+  const argv = readCapture(cap).argv.join(' ');
+  assert.match(argv, /\(f x :args '\(\(depth \. 2\) \(mode \. "fast"\)\)\)/);
 });

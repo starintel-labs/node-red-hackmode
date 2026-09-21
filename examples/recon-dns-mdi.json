@@ -1,0 +1,73 @@
+[
+ {
+  "id": "t-recon-dns-mdi",
+  "type": "tab",
+  "label": "recon-dns: check-mdi",
+  "disabled": false,
+  "info": "Microsoft Intune MDI check."
+ },
+ {
+  "id": "n-recon-dns-mdi-0",
+  "type": "inject",
+  "z": "t-recon-dns-mdi",
+  "x": 180,
+  "y": 120,
+  "wires": [
+   [
+    "n-recon-dns-mdi-1"
+   ]
+  ],
+  "name": "input",
+  "props": [
+   {
+    "p": "payload"
+   }
+  ],
+  "repeat": "",
+  "crontab": "",
+  "once": false,
+  "topic": "",
+  "payload": "starintel.actor",
+  "payloadType": "str"
+ },
+ {
+  "id": "n-recon-dns-mdi-1",
+  "type": "hackmode-tool",
+  "z": "t-recon-dns-mdi",
+  "x": 410,
+  "y": 120,
+  "wires": [
+   [
+    "n-recon-dns-mdi-2"
+   ]
+  ],
+  "name": "recon-dns",
+  "runtime": "cfg-recon-dns-mdi",
+  "system": "recon-dns",
+  "template": "(recon.dns:check-mdi \"{{payload}}\")"
+ },
+ {
+  "id": "n-recon-dns-mdi-2",
+  "type": "debug",
+  "z": "t-recon-dns-mdi",
+  "x": 640,
+  "y": 120,
+  "wires": [],
+  "name": "stdout",
+  "active": true,
+  "tosidebar": true,
+  "console": false,
+  "complete": "payload",
+  "targetType": "msg"
+ },
+ {
+  "type": "hackmode-runtime",
+  "name": "auto runtime",
+  "lisp": "sbcl",
+  "source": "auto",
+  "refresh": false,
+  "hackmodeHome": "",
+  "timeoutMs": 120000,
+  "id": "cfg-recon-dns-mdi"
+ }
+]

@@ -4,6 +4,8 @@
         color: '#2c3e50',
         defaults: {
             name: { value: '' },
+            source: { value: 'auto' },
+            refresh: { value: false },
             lisp: { value: 'sbcl' },
             hackmodeHome: { value: '', required: true },
             timeoutMs: { value: 60000 }
@@ -18,6 +20,18 @@
     <div class="form-row">
         <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-config-input-name">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-source"><i class="fa fa-magic"></i> Source</label>
+        <select id="node-config-input-source">
+            <option value="auto">auto (clone into ~/.local/share on first use)</option>
+            <option value="checkout">existing checkout</option>
+        </select>
+        <div class="form-tips">Auto keeps a recursive shallow clone of the hackmode monorepo under XDG data; no manual checkout is ever required.</div>
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-refresh"><i class="fa fa-refresh"></i> Refresh clone</label>
+        <input type="checkbox" id="node-config-input-refresh" style="width: auto">
     </div>
     <div class="form-row">
         <label for="node-config-input-lisp"><i class="fa fa-terminal"></i> Lisp</label>

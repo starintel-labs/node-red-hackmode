@@ -1,0 +1,72 @@
+[
+ {
+  "id": "t-eval-arbitrary-form",
+  "type": "tab",
+  "label": "hackmode: arbitrary form",
+  "disabled": false,
+  "info": "Evaluate any Lisp form in a fresh auto-provisioned hackmode process."
+ },
+ {
+  "id": "n-eval-arbitrary-form-0",
+  "type": "inject",
+  "z": "t-eval-arbitrary-form",
+  "x": 180,
+  "y": 120,
+  "wires": [
+   [
+    "n-eval-arbitrary-form-1"
+   ]
+  ],
+  "name": "form",
+  "props": [
+   {
+    "p": "payload"
+   }
+  ],
+  "repeat": "",
+  "crontab": "",
+  "once": false,
+  "topic": "",
+  "payload": "(print :hello-from-node-red)",
+  "payloadType": "str"
+ },
+ {
+  "id": "n-eval-arbitrary-form-1",
+  "type": "hackmode",
+  "z": "t-eval-arbitrary-form",
+  "x": 410,
+  "y": 120,
+  "wires": [
+   [
+    "n-eval-arbitrary-form-2"
+   ]
+  ],
+  "name": "eval",
+  "runtime": "cfg-eval-arbitrary-form",
+  "form": ""
+ },
+ {
+  "id": "n-eval-arbitrary-form-2",
+  "type": "debug",
+  "z": "t-eval-arbitrary-form",
+  "x": 640,
+  "y": 120,
+  "wires": [],
+  "name": "stdout",
+  "active": true,
+  "tosidebar": true,
+  "console": false,
+  "complete": "payload",
+  "targetType": "msg"
+ },
+ {
+  "type": "hackmode-runtime",
+  "name": "auto runtime",
+  "lisp": "sbcl",
+  "source": "auto",
+  "refresh": false,
+  "hackmodeHome": "",
+  "timeoutMs": 120000,
+  "id": "cfg-eval-arbitrary-form"
+ }
+]
