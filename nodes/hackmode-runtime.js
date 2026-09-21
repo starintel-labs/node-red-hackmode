@@ -26,7 +26,10 @@ module.exports = function (RED) {
       if (node._ready) return node._ready.then((core) => callback(null, core), callback);
       node._ready = new Promise((resolve, reject) => {
         provision.ensureHackmodeClone(node.refresh, (err, core) => {
-          if (err) reject(err); else { node.hackmodeHome = core; resolve(core); }
+          if (err) reject(err); else {
+            node.hackmodeHome = core;
+            resolve(core);
+          }
         });
       });
       return node._ready.then((core) => callback(null, core), callback);
