@@ -1,0 +1,29 @@
+{
+  "name": "node-red-hackmode",
+  "version": "0.1.0",
+  "description": "Node-RED nodes for the hackmode Common Lisp exploit metaframework",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/starintel-labs/node-red-hackmode.git"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test"
+  },
+  "keywords": [
+    "node-red",
+    "hackmode",
+    "common-lisp",
+    "recon",
+    "starintel"
+  ],
+  "node-red": {
+    "nodes": {
+      "hackmode-runtime": "nodes/hackmode-runtime.js",
+      "hackmode": "nodes/hackmode.js"
+    }
+  }
+}

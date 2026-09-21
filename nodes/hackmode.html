@@ -1,0 +1,42 @@
+<script type="text/javascript">
+    RED.nodes.registerType('hackmode', {
+        category: 'hackmode',
+        color: '#16a085',
+        defaults: {
+            name: { value: '' },
+            runtime: { type: 'hackmode-runtime', required: true },
+            form: { value: '' }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: 'serial.svg',
+        label: function () {
+            return this.name || 'hackmode';
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="hackmode">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-runtime"><i class="fa fa-server"></i> Runtime</label>
+        <input type="text" id="node-input-runtime">
+    </div>
+    <div class="form-row">
+        <label for="node-input-form"><i class="fa fa-code"></i> Form</label>
+        <input type="text" id="node-input-form" placeholder="(hm:operation-status)" >
+        <div class="form-tips">A Lisp form evaluated in a fresh runtime process with the :hackmode ASDF system loaded. Empty = msg.payload. Operator-owned configuration: flows are trusted code.</div>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="hackmode">
+    <p>Evaluate a Common Lisp form against the hackmode investigation and
+       reconnaissance runtime in a fresh subprocess.</p>
+    <p>stdout lands on <code>msg.payload</code>. Non-zero exits, timeouts and spawn
+       failures surface as node errors (HM_EXIT / HM_TIMEOUT / HM_SPAWN).
+       Structured result contracts and a hackmode-server transport are
+       follow-ups tracked on the roadmap issue.</p>
+</script>
