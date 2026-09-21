@@ -1,0 +1,58 @@
+[
+    {
+        "id": "ex-hm-tab",
+        "type": "tab",
+        "label": "Hackmode eval",
+        "disabled": false,
+        "info": "Evaluate a Common Lisp form in a fresh hackmode runtime process. Point the hackmode-runtime config at a lisp binary (default sbcl) and the hackmode-core source tree."
+    },
+    {
+        "id": "ex-hm-inject",
+        "type": "inject",
+        "z": "ex-hm-tab",
+        "name": "form",
+        "props": [{ "p": "payload" }],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "topic": "",
+        "payload": "(print :hello-from-node-red)",
+        "payloadType": "str",
+        "x": 210,
+        "y": 120,
+        "wires": [["ex-hm-node"]]
+    },
+    {
+        "id": "ex-hm-node",
+        "type": "hackmode",
+        "z": "ex-hm-tab",
+        "name": "hackmode eval",
+        "runtime": "ex-hm-runtime",
+        "form": "",
+        "x": 430,
+        "y": 120,
+        "wires": [["ex-hm-debug"]]
+    },
+    {
+        "id": "ex-hm-debug",
+        "type": "debug",
+        "z": "ex-hm-tab",
+        "name": "stdout",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 630,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "ex-hm-runtime",
+        "type": "hackmode-runtime",
+        "name": "local hackmode",
+        "lisp": "sbcl",
+        "hackmodeHome": "/home/unseen/Documents/Projects/hackmode/source/hackmode-core",
+        "timeoutMs": 60000
+    }
+]

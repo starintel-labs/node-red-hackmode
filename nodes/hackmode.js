@@ -1,7 +1,7 @@
 module.exports = function (RED) {
   'use strict';
 
-  const helpers = RED.nodes.hackmode;
+  const helpers = require('../lib/hackmode-subprocess');
 
   function HackmodeNode(config) {
     RED.nodes.createNode(this, config);

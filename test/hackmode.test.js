@@ -107,3 +107,15 @@ test('hackmode node refuses to run without a runtime config', async () => {
   assert.strictEqual(result.sent.length, 0);
   assert.strictEqual(result.err.code, 'HM_CONFIG');
 });
+
+test('hackmode node works when loaded alone on its own RED view (loader isolation regression)', async () => {
+  const cap = captureFile();
+  const restore = freshEnv(cap);
+  const RED = loadModules('nodes/hackmode.js');
+  RED._nodesById.rt1 = Object.assign({}, RUNTIME);
+  const node = instantiate(RED, 'hackmode', { runtime: 'rt1', form: '(solo)' });
+  const result = await driveInput(node, {});
+  restore();
+  assert.strictEqual(result.err, undefined, result.err && result.err.message);
+  assert.match(readCapture(cap).argv.join(' '), /\(solo\)/);
+});
