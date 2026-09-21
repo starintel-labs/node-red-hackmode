@@ -1,0 +1,73 @@
+[
+ {
+  "id": "t-recon-dns-oam-subs",
+  "type": "tab",
+  "label": "recon-dns: oam-subs",
+  "disabled": false,
+  "info": "OAM subdomain enumeration."
+ },
+ {
+  "id": "n-recon-dns-oam-subs-0",
+  "type": "inject",
+  "z": "t-recon-dns-oam-subs",
+  "x": 180,
+  "y": 120,
+  "wires": [
+   [
+    "n-recon-dns-oam-subs-1"
+   ]
+  ],
+  "name": "input",
+  "props": [
+   {
+    "p": "payload"
+   }
+  ],
+  "repeat": "",
+  "crontab": "",
+  "once": false,
+  "topic": "",
+  "payload": "starintel.actor",
+  "payloadType": "str"
+ },
+ {
+  "id": "n-recon-dns-oam-subs-1",
+  "type": "hackmode-tool",
+  "z": "t-recon-dns-oam-subs",
+  "x": 410,
+  "y": 120,
+  "wires": [
+   [
+    "n-recon-dns-oam-subs-2"
+   ]
+  ],
+  "name": "recon-dns",
+  "runtime": "cfg-recon-dns-oam-subs",
+  "system": "recon-dns",
+  "template": "(recon.dns:oam-subs \"{{payload}}\")"
+ },
+ {
+  "id": "n-recon-dns-oam-subs-2",
+  "type": "debug",
+  "z": "t-recon-dns-oam-subs",
+  "x": 640,
+  "y": 120,
+  "wires": [],
+  "name": "stdout",
+  "active": true,
+  "tosidebar": true,
+  "console": false,
+  "complete": "payload",
+  "targetType": "msg"
+ },
+ {
+  "type": "hackmode-runtime",
+  "name": "auto runtime",
+  "lisp": "sbcl",
+  "source": "auto",
+  "refresh": false,
+  "hackmodeHome": "",
+  "timeoutMs": 120000,
+  "id": "cfg-recon-dns-oam-subs"
+ }
+]

@@ -1,0 +1,76 @@
+[
+ {
+  "id": "t-tool-with-args",
+  "type": "tab",
+  "label": "hackmode-tool: args alist",
+  "disabled": false,
+  "info": "Pass msg.args as a Lisp alist through {{args}}."
+ },
+ {
+  "id": "n-tool-with-args-0",
+  "type": "inject",
+  "z": "t-tool-with-args",
+  "x": 180,
+  "y": 120,
+  "wires": [
+   [
+    "n-tool-with-args-1"
+   ]
+  ],
+  "name": "target+args",
+  "props": [
+   {
+    "p": "payload"
+   },
+   {
+    "p": "args"
+   }
+  ],
+  "repeat": "",
+  "crontab": "",
+  "once": false,
+  "topic": "",
+  "payload": "starintel.actor",
+  "payloadType": "str"
+ },
+ {
+  "id": "n-tool-with-args-1",
+  "type": "hackmode-tool",
+  "z": "t-tool-with-args",
+  "x": 410,
+  "y": 120,
+  "wires": [
+   [
+    "n-tool-with-args-2"
+   ]
+  ],
+  "name": "subfinder args",
+  "runtime": "cfg-tool-with-args",
+  "system": "recon-dns",
+  "template": "(progn (recon.dns:subfinder \"{{payload}}\") {{args}})"
+ },
+ {
+  "id": "n-tool-with-args-2",
+  "type": "debug",
+  "z": "t-tool-with-args",
+  "x": 640,
+  "y": 120,
+  "wires": [],
+  "name": "stdout",
+  "active": true,
+  "tosidebar": true,
+  "console": false,
+  "complete": "payload",
+  "targetType": "msg"
+ },
+ {
+  "type": "hackmode-runtime",
+  "name": "auto runtime",
+  "lisp": "sbcl",
+  "source": "auto",
+  "refresh": false,
+  "hackmodeHome": "",
+  "timeoutMs": 120000,
+  "id": "cfg-tool-with-args"
+ }
+]

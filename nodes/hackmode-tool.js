@@ -1,28 +1,12 @@
 module.exports = function (RED) {
   'use strict';
 
+  const forms = require('../lib/hackmode-forms');
+
   // One node per hackmode tool family: loads the tool's ASDF system and
   // evaluates a form. The template supports {{payload}} (stringified
   // msg.payload) and {{args}} (JSON-encoded msg.args object rendered as a
   // plist-ish alist). Defaults target :recon-dns (subfinder/dnsrecon/...).
-  function renderForm(template, msg) {
-    const payload = msg.payload === undefined || msg.payload === null
-      ? '' : String(msg.payload);
-    const args = msg.args && typeof msg.args === 'object'
-      ? toLispAlist(msg.args) : '()';
-    return String(template || '')
-      .replace(/\{\{payload\}\}/g, payload.replace(/"/g, '\\"'))
-      .replace(/\{\{args\}\}/g, args);
-  }
-
-  function toLispAlist(obj) {
-    const pairs = Object.entries(obj).map(([k, v]) => {
-      const value = typeof v === 'number' ? String(v) : '"' + String(v).replace(/"/g, '\\"') + '"';
-      return '(' + k.replace(/[^a-z0-9-]/gi, '-') + ' . ' + value + ')';
-    });
-    return "'(" + pairs.join(' ') + ')';
-  }
-
   function HackmodeToolNode(config) {
     RED.nodes.createNode(this, config);
     const node = this;
@@ -41,7 +25,7 @@ module.exports = function (RED) {
       }
       const form = '(progn (asdf:load-system :' +
         String(node.system).replace(/[^a-z0-9-]/gi, '-') + ') ' +
-        renderForm(node.template, msg) + ')';
+        forms.renderForm(node.template, msg) + ')';
       node.status({ fill: 'blue', shape: 'dot', text: node.system });
       node.runtime.evaluate(form, (err, stdout) => {
         if (err) {

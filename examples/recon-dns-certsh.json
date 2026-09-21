@@ -1,0 +1,73 @@
+[
+ {
+  "id": "t-recon-dns-certsh",
+  "type": "tab",
+  "label": "recon-dns: cert.sh",
+  "disabled": false,
+  "info": "Certificate transparency lookup via cert.sh."
+ },
+ {
+  "id": "n-recon-dns-certsh-0",
+  "type": "inject",
+  "z": "t-recon-dns-certsh",
+  "x": 180,
+  "y": 120,
+  "wires": [
+   [
+    "n-recon-dns-certsh-1"
+   ]
+  ],
+  "name": "input",
+  "props": [
+   {
+    "p": "payload"
+   }
+  ],
+  "repeat": "",
+  "crontab": "",
+  "once": false,
+  "topic": "",
+  "payload": "starintel.actor",
+  "payloadType": "str"
+ },
+ {
+  "id": "n-recon-dns-certsh-1",
+  "type": "hackmode-tool",
+  "z": "t-recon-dns-certsh",
+  "x": 410,
+  "y": 120,
+  "wires": [
+   [
+    "n-recon-dns-certsh-2"
+   ]
+  ],
+  "name": "recon-dns",
+  "runtime": "cfg-recon-dns-certsh",
+  "system": "recon-dns",
+  "template": "(recon.dns:cert.sh \"{{payload}}\")"
+ },
+ {
+  "id": "n-recon-dns-certsh-2",
+  "type": "debug",
+  "z": "t-recon-dns-certsh",
+  "x": 640,
+  "y": 120,
+  "wires": [],
+  "name": "stdout",
+  "active": true,
+  "tosidebar": true,
+  "console": false,
+  "complete": "payload",
+  "targetType": "msg"
+ },
+ {
+  "type": "hackmode-runtime",
+  "name": "auto runtime",
+  "lisp": "sbcl",
+  "source": "auto",
+  "refresh": false,
+  "hackmodeHome": "",
+  "timeoutMs": 120000,
+  "id": "cfg-recon-dns-certsh"
+ }
+]
